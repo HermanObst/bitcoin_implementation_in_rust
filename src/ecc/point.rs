@@ -1,4 +1,4 @@
-use bitcoin::types::errors::Errors;
+use crate::types::errors::Errors;
 use num_bigint::{BigInt, ToBigInt};
 use core::ops::Add;
 

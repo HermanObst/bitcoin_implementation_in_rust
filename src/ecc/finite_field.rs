@@ -4,26 +4,26 @@ use num_bigint::ToBigInt;
 use std::ops::{Add, Div, Mul, Sub};
 
 
-#[derive(Debug, PartialEq, Eq)]
-struct FieldElement {
-    num: BigInt,
-    prime: BigInt,
+#[derive(Debug, PartialEq, Eq, Clone)]
+pub(crate) struct FieldElement {
+    pub(crate) num: BigInt,
+    pub(crate) prime: BigInt,
 }
 
 #[allow(dead_code)]
 impl FieldElement {
-    fn new(num: BigInt, prime: BigInt) -> FieldElement {
+    pub fn new(num: BigInt, prime: BigInt) -> FieldElement {
         FieldElement {
             num,
             prime,
         }
     }
 
-    fn eq(&self, elem: FieldElement) -> bool {
+    pub fn eq(&self, elem: FieldElement) -> bool {
         self.num == elem.num && self.prime == elem.prime
     }
 
-    fn pow(&self, exp: &BigInt) -> FieldElement {
+    pub fn pow(&self, exp: &BigInt) -> FieldElement {
         let positive_exponent = exp.rem_euclid(self.prime.clone() - 1);
         let num = self.num.modpow(&positive_exponent, &self.prime);
 
@@ -38,7 +38,7 @@ impl Add<FieldElement> for FieldElement {
         assert!(self.prime == elem.prime, "Cannot add two numbers in different fields");
         let num = (self.num + elem.num).rem_euclid(self.prime.clone());
 
-        FieldElement::new(num, self.prime.clone())
+        FieldElement::new(num, self.prime)
     }
 }
 
@@ -49,7 +49,7 @@ impl Sub<FieldElement> for FieldElement {
         assert!(self.prime == elem.prime, "Cannot subtract two numbers in different fields");
         let num = (self.num - elem.num).rem_euclid(self.prime.clone());
 
-        FieldElement::new(num, self.prime.clone())
+        FieldElement::new(num, self.prime)
     }
 }
 
@@ -60,7 +60,7 @@ impl Mul<FieldElement> for FieldElement {
         assert!(self.prime == elem.prime, "Cannot multiply two numbers in different fields");
         let num = (self.num * elem.num).rem_euclid(self.prime.clone());
 
-        FieldElement::new(num, self.prime.clone())
+        FieldElement::new(num, self.prime)
     }
 }
 
@@ -72,7 +72,7 @@ impl Div<FieldElement> for FieldElement {
         let factor = elem.num.modpow(&(self.prime.clone() - 2_i32.to_bigint().unwrap()), &self.prime);
         let num = (self.num.clone() * factor) % self.prime.clone();
 
-        FieldElement::new(num, self.prime.clone())
+        FieldElement::new(num, self.prime)
     }
 }
 

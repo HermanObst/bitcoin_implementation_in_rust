@@ -1,5 +1,5 @@
-mod finite_field;
-mod point;
+mod ecc;
+mod types;
 
 fn main() {
     println!("Hello, world!");
